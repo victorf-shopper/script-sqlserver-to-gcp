@@ -1,6 +1,8 @@
 pandas
 pyarrow
 sqlalchemy
-google-cloud-storage
-tqdm
 pyodbc
+google-cloud-storage
+google-cloud-bigquery
+google-auth
+tqdm

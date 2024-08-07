@@ -6,6 +6,8 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from sqlalchemy import create_engine
 from google.cloud import storage
+from google.cloud import bigquery
+from google.oauth2 import service_account
 from tqdm import tqdm
 
 # Carregar configurações dos arquivos config.json e configschema.json
@@ -127,12 +129,45 @@ def move_folder(src_folder, dest_folder):
     except Exception as e:
         print(f'Erro ao mover a pasta {src_folder}: {e}')
 
+# Função para criar uma tabela externa no BigQuery
+def create_external_table_in_bigquery(dataset_name, table_name, bucket_name, credentials_path):
+    try:
+        # Crie uma instância do cliente BigQuery com as credenciais
+        credentials = service_account.Credentials.from_service_account_file(credentials_path)
+        client = bigquery.Client(credentials=credentials, project=credentials.project_id)
+        dataset_id = f'{client.project}.{dataset_name}'
+        table_id = f'{dataset_id}.{table_name}'
+
+        # Verifica se o dataset já existe
+        try:
+            client.get_dataset(dataset_id)
+            print(f'Dataset {dataset_id} já existe.')
+        except:
+            # Cria o dataset se ele não existir
+            dataset = bigquery.Dataset(dataset_id)
+            dataset = client.create_dataset(dataset)
+            print(f'Dataset {dataset_id} criado com sucesso.')
+        
+        sql = f"""
+        CREATE OR REPLACE EXTERNAL TABLE `{table_id}`
+        OPTIONS (
+            format='PARQUET',
+            uris=['gs://{bucket_name}/prod_banco/{table_name}/*']
+        );
+        """
+        
+        query_job = client.query(sql)
+        query_job.result()
+        print(f'Tabela externa {table_id} criada com sucesso.')
+    
+    except Exception as e:
+        print(f'Erro ao criar a tabela externa no BigQuery: {e}')
+
 # Execuções
 process_and_save_table(table_name, config['chunk_size'], config['db_config'])
-print("Processamento concluído com sucesso!")
 
 upload_to_gcs(config['bucket_name'], config['local_folder'], config['credentials_path'])
-print("Envio ao GCP concluído com sucesso!")
 
 move_folder(table_folder, config['out_folder'])
-print("Pasta movida com sucesso!")
+
+create_external_table_in_bigquery(config['bigquery_dataset'], table_name, config['bucket_name'], config['credentials_path'])
