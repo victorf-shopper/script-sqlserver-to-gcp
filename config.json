@@ -1,0 +1,15 @@
+{
+    "local_folder": "prod_banco",
+    "out_folder": "prod_banco_out",
+    "bucket_name": "bucket",
+    "credentials_path": "credentials.json",
+    "chunk_size": 10000,
+    "db_config": {
+      "server": "localhost",
+      "port": "1433",
+      "database": "master",
+      "user": "sa",
+      "password": "senha"
+    }
+  }
+  

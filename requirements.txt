@@ -1,0 +1,6 @@
+pandas
+pyarrow
+sqlalchemy
+google-cloud-storage
+tqdm
+pyodbc
