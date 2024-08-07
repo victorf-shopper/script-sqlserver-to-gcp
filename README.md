@@ -15,7 +15,7 @@ pip install -r requirements.txt
 Ajuste as informações de acesso e configuração no arquivo `config.json`. Certifique-se de atualizar os seguintes campos com os valores apropriados para seu ambiente:
 
 - **bucket_name**: Nome do bucket no Google Cloud Storage.
-- **bucket_name**: Nome do dataset no Big Query.
+- **bigquery_dataset**: Nome do dataset no Big Query.
 - **credentials_path**: Caminho para o arquivo de credenciais do Google Cloud.
 - **local_folder**: Caminho para o diretório local onde os arquivos serão salvos.
 - **out_folder**: Caminho para o diretório de destino onde a pasta será movida.
