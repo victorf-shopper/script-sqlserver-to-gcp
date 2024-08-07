@@ -128,7 +128,7 @@ def move_folder(src_folder, dest_folder):
         print(f'Erro ao mover a pasta {src_folder}: {e}')
 
 # Função para criar uma tabela externa no BigQuery
-def create_external_table_in_bigquery(dataset_name, table_name, bucket_name, credentials_path):
+def create_external_table_in_bigquery(dataset_name, table_name, bucket_name, local_folder, credentials_path):
     try:
         # Crie uma instância do cliente BigQuery com as credenciais
         credentials = service_account.Credentials.from_service_account_file(credentials_path)
@@ -151,7 +151,7 @@ def create_external_table_in_bigquery(dataset_name, table_name, bucket_name, cre
         CREATE OR REPLACE EXTERNAL TABLE `{table_id}`
         OPTIONS (
             format='PARQUET',
-            uris=['gs://{bucket_name}/prod_banco/{table_name}/*']
+            uris=['gs://{bucket_name}/{local_folder}/{table_name}/*']
         );
         """
         
@@ -169,4 +169,4 @@ upload_to_gcs(config['bucket_name'], config['local_folder'], config['credentials
 
 move_folder(table_folder, config['out_folder'])
 
-create_external_table_in_bigquery(config['bigquery_dataset'], table_name, config['bucket_name'], config['credentials_path'])
+create_external_table_in_bigquery(config['bigquery_dataset'], table_name, config['bucket_name'], config['local_folder'] config['credentials_path'])
