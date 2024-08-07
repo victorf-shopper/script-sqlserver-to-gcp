@@ -33,9 +33,7 @@ def save_to_parquet(df, file_path):
 # Função para ajustar tipos de dados do DataFrame
 def adjust_dtypes(df, dtype_config):
     for column, dtype in dtype_config.items():
-        if dtype == 'int64':
-            df[column] = df[column].astype('int64')
-        elif dtype == 'string':
+        if dtype == 'string':
             df[column] = df[column].astype('string')
         elif dtype == 'datetime':
             df[column] = pd.to_datetime(df[column])
@@ -145,6 +143,7 @@ def create_external_table_in_bigquery(dataset_name, table_name, bucket_name, cre
         except:
             # Cria o dataset se ele não existir
             dataset = bigquery.Dataset(dataset_id)
+            dataset.location = 'southamerica-east1'
             dataset = client.create_dataset(dataset)
             print(f'Dataset {dataset_id} criado com sucesso.')
         
