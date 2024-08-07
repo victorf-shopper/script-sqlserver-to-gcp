@@ -169,4 +169,4 @@ upload_to_gcs(config['bucket_name'], config['local_folder'], config['credentials
 
 move_folder(table_folder, config['out_folder'])
 
-create_external_table_in_bigquery(config['bigquery_dataset'], table_name, config['bucket_name'], config['local_folder'] config['credentials_path'])
+create_external_table_in_bigquery(config['bigquery_dataset'], table_name, config['bucket_name'], config['local_folder'], config['credentials_path'])
